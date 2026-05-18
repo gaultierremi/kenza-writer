@@ -151,7 +151,7 @@ export default function EditorPanel({ projectId }: Props) {
     editorProps: {
       attributes: {
         class:
-          'prose prose-sm max-w-none focus:outline-none p-6 min-h-full leading-relaxed',
+          'prose prose-sm max-w-none focus:outline-none p-6 min-h-full leading-relaxed text-black',
       },
     },
     onUpdate({ editor: ed, transaction }) {
@@ -247,7 +247,7 @@ export default function EditorPanel({ projectId }: Props) {
   return (
     <div className="flex flex-col h-full overflow-hidden bg-white">
       {/* toolbar */}
-      <div className="flex items-center gap-0.5 px-3 py-1.5 border-b border-gray-200 flex-wrap">
+      <div className="relative z-40 bg-white flex items-center gap-0.5 px-3 py-1.5 border-b border-gray-200 flex-wrap">
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
           active={editor.isActive('bold')}
