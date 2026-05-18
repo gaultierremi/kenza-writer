@@ -96,6 +96,7 @@ export default function EditorPanel({ projectId }: Props) {
   const [aiEnabled, setAiEnabled] = useState(true)
   const [popover, setPopover] = useState<PopoverState | null>(null)
   const [contentLoaded, setContentLoaded] = useState(false)
+  const [wordCount, setWordCount] = useState(0)
 
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const detectTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -157,6 +158,8 @@ export default function EditorPanel({ projectId }: Props) {
     onUpdate({ editor: ed, transaction }) {
       if (transaction.getMeta('loreHighlightUpdate')) return
 
+      setWordCount(ed.getText().split(/\s+/).filter(Boolean).length)
+
       // debounced save (1 500 ms)
       if (saveTimer.current) clearTimeout(saveTimer.current)
       saveTimer.current = setTimeout(() => {
@@ -187,6 +190,7 @@ export default function EditorPanel({ projectId }: Props) {
         .single()
       if (data?.content) {
         editor!.commands.setContent(data.content as JSONContent)
+        setWordCount(editor!.getText().split(/\s+/).filter(Boolean).length)
       }
       setContentLoaded(true)
     }
@@ -335,8 +339,11 @@ export default function EditorPanel({ projectId }: Props) {
       </div>
 
       {/* editor area */}
-      <div ref={editorContainerRef} className="flex-1 overflow-y-auto">
+      <div ref={editorContainerRef} className="relative flex-1 overflow-y-auto">
         <EditorContent editor={editor} className="h-full" />
+        <span className="absolute bottom-2 right-3 text-sm text-gray-400">
+          {wordCount} mots
+        </span>
       </div>
 
       {popover && <LorePopover state={popover} />}
