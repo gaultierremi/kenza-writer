@@ -125,7 +125,7 @@ export default function LoreForm({
     <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-4">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold text-sm">
-          {initial ? 'Modifier l'entrée' : 'Nouvelle entrée lore'}
+          {initial ? "Modifier l'entrée" : 'Nouvelle entrée lore'}
         </h3>
         <button
           type="button"
