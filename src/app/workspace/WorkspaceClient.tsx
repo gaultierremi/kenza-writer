@@ -10,26 +10,21 @@ interface Props {
   projectId: string
 }
 
-type Layout = 'desktop' | 'tablet' | 'mobile'
-type MobileTab = 'characters' | 'lore' | 'editor'
-type SidebarPanel = 'characters' | 'lore' | null
+type Drawer = 'characters' | 'lore' | null
 
-function useLayout(): Layout {
-  const [layout, setLayout] = useState<Layout>('desktop')
+function useIsMobile(): boolean {
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     function update() {
-      const w = window.innerWidth
-      if (w >= 1024) setLayout('desktop')
-      else if (w >= 640) setLayout('tablet')
-      else setLayout('mobile')
+      setIsMobile(window.innerWidth < 768)
     }
     update()
     window.addEventListener('resize', update)
     return () => window.removeEventListener('resize', update)
   }, [])
 
-  return layout
+  return isMobile
 }
 
 // ─── resize handle ───────────────────────────────────────────────────────────
@@ -62,119 +57,95 @@ function DesktopLayout({ projectId }: Props) {
   )
 }
 
-// ─── tablet layout ───────────────────────────────────────────────────────────
-
-function TabletLayout({ projectId }: Props) {
-  const [open, setOpen] = useState<SidebarPanel>(null)
-
-  function toggle(panel: Exclude<SidebarPanel, null>) {
-    setOpen((prev) => (prev === panel ? null : panel))
-  }
-
-  return (
-    <div className="flex h-full relative overflow-hidden">
-      {/* icon sidebar */}
-      <div className="w-11 shrink-0 bg-gray-50 border-r border-gray-200 flex flex-col items-center py-3 gap-2">
-        <SidebarIconButton
-          label="Personnages"
-          active={open === 'characters'}
-          onClick={() => toggle('characters')}
-        >
-          👤
-        </SidebarIconButton>
-        <SidebarIconButton
-          label="Lore"
-          active={open === 'lore'}
-          onClick={() => toggle('lore')}
-        >
-          📖
-        </SidebarIconButton>
-      </div>
-
-      {/* sliding overlay panel */}
-      {open && (
-        <>
-          <div
-            className="absolute inset-0 left-11 z-10 bg-black/20"
-            onClick={() => setOpen(null)}
-          />
-          <div className="absolute top-0 bottom-0 left-11 w-72 z-20 shadow-xl">
-            {open === 'characters' ? (
-              <CharacterPanel projectId={projectId} />
-            ) : (
-              <LorePanel projectId={projectId} />
-            )}
-          </div>
-        </>
-      )}
-
-      {/* editor */}
-      <div className="flex-1 overflow-hidden">
-        <EditorPanel projectId={projectId} />
-      </div>
-    </div>
-  )
-}
-
-function SidebarIconButton({
-  label,
-  active,
-  onClick,
-  children,
-}: {
-  label: string
-  active: boolean
-  onClick: () => void
-  children: React.ReactNode
-}) {
-  return (
-    <button
-      title={label}
-      onClick={onClick}
-      className={`w-8 h-8 rounded-lg flex items-center justify-center text-base transition-colors ${
-        active ? 'bg-blue-100 ring-1 ring-blue-300' : 'hover:bg-gray-200'
-      }`}
-    >
-      {children}
-    </button>
-  )
-}
-
 // ─── mobile layout ───────────────────────────────────────────────────────────
 
 function MobileLayout({ projectId }: Props) {
-  const [tab, setTab] = useState<MobileTab>('editor')
+  const [drawer, setDrawer] = useState<Drawer>(null)
+
+  function openDrawer(d: Exclude<Drawer, null>) {
+    setDrawer(d)
+  }
+
+  function closeDrawer() {
+    setDrawer(null)
+  }
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-hidden">
-        {tab === 'characters' && <CharacterPanel projectId={projectId} />}
-        {tab === 'lore' && <LorePanel projectId={projectId} />}
-        {tab === 'editor' && <EditorPanel projectId={projectId} />}
+    <div className="relative h-full overflow-hidden">
+      {/* Editor fullscreen */}
+      <div className="h-full">
+        <EditorPanel projectId={projectId} />
       </div>
 
-      <nav className="flex border-t border-gray-200 bg-white">
-        {(
-          [
-            { id: 'characters', label: 'Persos', icon: '👤' },
-            { id: 'editor', label: 'Éditeur', icon: '✏️' },
-            { id: 'lore', label: 'Lore', icon: '📖' },
-          ] as { id: MobileTab; label: string; icon: string }[]
-        ).map(({ id, label, icon }) => (
-          <button
-            key={id}
-            onClick={() => setTab(id)}
-            className={`flex-1 flex flex-col items-center py-2 gap-0.5 text-xs font-medium transition-colors ${
-              tab === id
-                ? 'text-blue-600 border-t-2 border-blue-600 -mt-px'
-                : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            <span className="text-base">{icon}</span>
-            {label}
-          </button>
-        ))}
-      </nav>
+      {/* Floating buttons — top-left, mobile only */}
+      <div className="absolute top-3 left-3 flex flex-col gap-2 z-30">
+        <button
+          onClick={() => openDrawer('characters')}
+          className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 text-white text-xs font-medium rounded-lg shadow-md hover:bg-blue-700 active:bg-blue-800 transition-colors"
+        >
+          👤 Personnages
+        </button>
+        <button
+          onClick={() => openDrawer('lore')}
+          className="flex items-center gap-1.5 px-3 py-2 bg-purple-600 text-white text-xs font-medium rounded-lg shadow-md hover:bg-purple-700 active:bg-purple-800 transition-colors"
+        >
+          📖 Lore
+        </button>
+      </div>
+
+      {/* Semi-transparent overlay — closes drawer on tap outside */}
+      {drawer !== null && (
+        <div
+          className="absolute inset-0 z-40 bg-black/40"
+          onClick={closeDrawer}
+        />
+      )}
+
+      {/* Characters drawer — slides from left */}
+      <div
+        className={`absolute inset-y-0 left-0 w-72 z-50 shadow-xl transition-transform duration-300 ease-in-out ${
+          drawer === 'characters' ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="flex flex-col h-full">
+          <div className="flex items-center justify-between px-3 py-2 bg-blue-50 border-b border-gray-200 shrink-0">
+            <span className="text-sm font-semibold text-blue-800">Personnages</span>
+            <button
+              onClick={closeDrawer}
+              className="text-gray-500 hover:text-gray-700 p-1 rounded transition-colors"
+              aria-label="Fermer le panneau personnages"
+            >
+              ✕
+            </button>
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <CharacterPanel projectId={projectId} />
+          </div>
+        </div>
+      </div>
+
+      {/* Lore drawer — slides from left */}
+      <div
+        className={`absolute inset-y-0 left-0 w-72 z-50 shadow-xl transition-transform duration-300 ease-in-out ${
+          drawer === 'lore' ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="flex flex-col h-full">
+          <div className="flex items-center justify-between px-3 py-2 bg-purple-50 border-b border-gray-200 shrink-0">
+            <span className="text-sm font-semibold text-purple-800">Lore</span>
+            <button
+              onClick={closeDrawer}
+              className="text-gray-500 hover:text-gray-700 p-1 rounded transition-colors"
+              aria-label="Fermer le panneau lore"
+            >
+              ✕
+            </button>
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <LorePanel projectId={projectId} />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -182,7 +153,7 @@ function MobileLayout({ projectId }: Props) {
 // ─── root ────────────────────────────────────────────────────────────────────
 
 export default function WorkspaceClient({ projectId }: Props) {
-  const layout = useLayout()
+  const isMobile = useIsMobile()
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
@@ -197,9 +168,11 @@ export default function WorkspaceClient({ projectId }: Props) {
       </header>
 
       <div className="flex-1 overflow-hidden">
-        {layout === 'desktop' && <DesktopLayout projectId={projectId} />}
-        {layout === 'tablet' && <TabletLayout projectId={projectId} />}
-        {layout === 'mobile' && <MobileLayout projectId={projectId} />}
+        {isMobile ? (
+          <MobileLayout projectId={projectId} />
+        ) : (
+          <DesktopLayout projectId={projectId} />
+        )}
       </div>
     </div>
   )
