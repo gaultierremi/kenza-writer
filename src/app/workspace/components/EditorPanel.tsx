@@ -39,8 +39,8 @@ function ToolbarButton({
       title={title}
       className={`px-2 py-1 rounded text-sm font-medium transition-colors ${
         active
-          ? 'bg-gray-800 text-white'
-          : 'text-gray-600 hover:bg-gray-100'
+          ? 'bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-900'
+          : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
       }`}
     >
       {children}
@@ -58,7 +58,7 @@ function LorePopover({ state }: { state: PopoverState }) {
 
   return createPortal(
     <div
-      className="lore-popover fixed z-50 bg-white border border-amber-200 rounded-lg shadow-xl p-3 max-w-[240px] pointer-events-none"
+      className="lore-popover fixed z-50 bg-white dark:bg-gray-800 border border-amber-200 dark:border-amber-700 rounded-lg shadow-xl p-3 max-w-[240px] pointer-events-none"
       style={{
         left: state.x,
         top: state.y - 12,
@@ -66,20 +66,20 @@ function LorePopover({ state }: { state: PopoverState }) {
       }}
     >
       <div className="flex items-center gap-1.5 mb-1">
-        <span className="font-semibold text-sm text-gray-900">
+        <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">
           {state.entry.name}
         </span>
-        <span className="text-xs text-amber-600 font-medium">
+        <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">
           {typeLabel[state.entry.type] ?? state.entry.type}
         </span>
       </div>
       {state.entry.description && (
-        <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">
+        <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-3">
           {state.entry.description}
         </p>
       )}
       <div
-        className="absolute left-1/2 -bottom-1.5 -translate-x-1/2 w-3 h-3 bg-white border-r border-b border-amber-200 rotate-45"
+        className="absolute left-1/2 -bottom-1.5 -translate-x-1/2 w-3 h-3 bg-white dark:bg-gray-800 border-r border-b border-amber-200 dark:border-amber-700 rotate-45"
         aria-hidden
       />
     </div>,
@@ -152,7 +152,7 @@ export default function EditorPanel({ projectId }: Props) {
     editorProps: {
       attributes: {
         class:
-          'prose prose-sm max-w-none focus:outline-none p-6 min-h-full leading-relaxed text-black',
+          'prose prose-sm max-w-none focus:outline-none p-6 min-h-full leading-relaxed text-gray-900 dark:text-gray-100',
       },
     },
     onUpdate({ editor: ed, transaction }) {
@@ -249,9 +249,9 @@ export default function EditorPanel({ projectId }: Props) {
   if (!editor) return null
 
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-white">
+    <div className="flex flex-col h-full overflow-hidden bg-white dark:bg-gray-800">
       {/* toolbar */}
-      <div className="relative z-40 bg-white flex items-center gap-0.5 px-3 py-1.5 border-b border-gray-200 flex-wrap">
+      <div className="relative z-40 bg-white dark:bg-gray-800 flex items-center gap-0.5 px-3 py-1.5 border-b border-gray-200 dark:border-gray-700 flex-wrap">
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
           active={editor.isActive('bold')}
@@ -267,7 +267,7 @@ export default function EditorPanel({ projectId }: Props) {
           <em>I</em>
         </ToolbarButton>
 
-        <span className="w-px h-5 bg-gray-200 mx-1" />
+        <span className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
 
         {([1, 2, 3] as const).map((level) => (
           <ToolbarButton
@@ -282,7 +282,7 @@ export default function EditorPanel({ projectId }: Props) {
           </ToolbarButton>
         ))}
 
-        <span className="w-px h-5 bg-gray-200 mx-1" />
+        <span className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
 
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -314,13 +314,13 @@ export default function EditorPanel({ projectId }: Props) {
 
         <div className="ml-auto flex items-center gap-2">
           {saveStatus === 'saving' && (
-            <span className="text-xs text-gray-400">Enregistrement…</span>
+            <span className="text-xs text-gray-400 dark:text-gray-500">Enregistrement…</span>
           )}
           {saveStatus === 'saved' && (
-            <span className="text-xs text-green-600">✓ Enregistré</span>
+            <span className="text-xs text-green-600 dark:text-green-400">✓ Enregistré</span>
           )}
 
-          <span className="w-px h-5 bg-gray-200" />
+          <span className="w-px h-5 bg-gray-200 dark:bg-gray-700" />
 
           <button
             type="button"
@@ -328,8 +328,8 @@ export default function EditorPanel({ projectId }: Props) {
             title={aiEnabled ? 'Désactiver la surveillance IA' : 'Activer la surveillance IA'}
             className={`flex items-center gap-1.5 text-xs px-2 py-1 rounded-full font-medium transition-colors ${
               aiEnabled
-                ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
-                : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                ? 'bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-900/50'
+                : 'bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600'
             }`}
           >
             <span>{aiEnabled ? '✦' : '○'}</span>
@@ -341,7 +341,7 @@ export default function EditorPanel({ projectId }: Props) {
       {/* editor area */}
       <div ref={editorContainerRef} className="relative flex-1 overflow-y-auto">
         <EditorContent editor={editor} className="h-full" />
-        <span className="absolute bottom-2 right-3 text-sm text-gray-400">
+        <span className="absolute bottom-2 right-3 text-sm text-gray-400 dark:text-gray-500">
           {wordCount} mots
         </span>
       </div>

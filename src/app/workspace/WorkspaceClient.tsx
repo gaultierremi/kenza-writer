@@ -5,6 +5,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import CharacterPanel from './components/CharacterPanel'
 import LorePanel from './components/LorePanel'
 import EditorPanel from './components/EditorPanel'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 interface Props {
   projectId: string
@@ -31,8 +32,8 @@ function useIsMobile(): boolean {
 
 function ResizeHandle() {
   return (
-    <PanelResizeHandle className="group relative w-1.5 bg-gray-100 hover:bg-blue-200 transition-colors flex items-center justify-center">
-      <div className="absolute w-0.5 h-8 bg-gray-300 group-hover:bg-blue-400 rounded-full transition-colors" />
+    <PanelResizeHandle className="group relative w-1.5 bg-gray-100 hover:bg-blue-200 dark:bg-gray-700 dark:hover:bg-blue-900 transition-colors flex items-center justify-center">
+      <div className="absolute w-0.5 h-8 bg-gray-300 group-hover:bg-blue-400 dark:bg-gray-600 dark:group-hover:bg-blue-500 rounded-full transition-colors" />
     </PanelResizeHandle>
   )
 }
@@ -108,11 +109,11 @@ function MobileLayout({ projectId }: Props) {
         }`}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between px-3 py-2 bg-blue-50 border-b border-gray-200 shrink-0">
-            <span className="text-sm font-semibold text-blue-800">Personnages</span>
+          <div className="flex items-center justify-between px-3 py-2 bg-blue-50 border-b border-gray-200 dark:bg-blue-900/20 dark:border-gray-700 shrink-0">
+            <span className="text-sm font-semibold text-blue-800 dark:text-blue-300">Personnages</span>
             <button
               onClick={closeDrawer}
-              className="text-gray-500 hover:text-gray-700 p-1 rounded transition-colors"
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-1 rounded transition-colors"
               aria-label="Fermer le panneau personnages"
             >
               ✕
@@ -131,11 +132,11 @@ function MobileLayout({ projectId }: Props) {
         }`}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between px-3 py-2 bg-purple-50 border-b border-gray-200 shrink-0">
-            <span className="text-sm font-semibold text-purple-800">Lore</span>
+          <div className="flex items-center justify-between px-3 py-2 bg-purple-50 border-b border-gray-200 dark:bg-purple-900/20 dark:border-gray-700 shrink-0">
+            <span className="text-sm font-semibold text-purple-800 dark:text-purple-300">Lore</span>
             <button
               onClick={closeDrawer}
-              className="text-gray-500 hover:text-gray-700 p-1 rounded transition-colors"
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-1 rounded transition-colors"
               aria-label="Fermer le panneau lore"
             >
               ✕
@@ -156,15 +157,16 @@ export default function WorkspaceClient({ projectId }: Props) {
   const isMobile = useIsMobile()
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      <header className="flex items-center justify-between px-4 py-2 bg-white border-b border-gray-200 shrink-0">
+    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+      <header className="flex items-center justify-between px-4 py-2 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 shrink-0">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-gray-900 text-sm">Kenza Writer</span>
-          <span className="text-gray-300 text-xs">|</span>
-          <span className="text-gray-500 text-xs truncate max-w-[160px]">
+          <span className="font-bold text-gray-900 dark:text-white text-sm">Kenza Writer</span>
+          <span className="text-gray-300 dark:text-gray-600 text-xs">|</span>
+          <span className="text-gray-500 dark:text-gray-400 text-xs truncate max-w-[160px]">
             Projet : {projectId}
           </span>
         </div>
+        <ThemeToggle />
       </header>
 
       <div className="flex-1 overflow-hidden">
