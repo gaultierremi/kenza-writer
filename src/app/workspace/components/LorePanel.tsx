@@ -10,10 +10,10 @@ interface Props {
 }
 
 const TYPE_BADGE: Record<string, string> = {
-  lieu: 'bg-green-100 text-green-700',
-  faction: 'bg-blue-100 text-blue-700',
-  objet: 'bg-yellow-100 text-yellow-700',
-  concept: 'bg-pink-100 text-pink-700',
+  lieu: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  faction: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  objet: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  concept: 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400',
 }
 
 export default function LorePanel({ projectId }: Props) {
@@ -58,9 +58,9 @@ export default function LorePanel({ projectId }: Props) {
   const showForm = creating || selected !== null
 
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-white border-r border-gray-200">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-        <h2 className="font-semibold text-sm text-gray-800">Lore</h2>
+    <div className="flex flex-col h-full overflow-hidden bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+        <h2 className="font-semibold text-sm text-gray-800 dark:text-gray-100">Lore</h2>
         {!showForm && (
           <button
             onClick={() => setCreating(true)}
@@ -87,9 +87,9 @@ export default function LorePanel({ projectId }: Props) {
       ) : (
         <div className="flex-1 overflow-y-auto">
           {loading ? (
-            <p className="text-xs text-gray-400 p-4">Chargement…</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 p-4">Chargement…</p>
           ) : entries.length === 0 ? (
-            <p className="text-xs text-gray-400 p-4">
+            <p className="text-xs text-gray-400 dark:text-gray-500 p-4">
               Aucune entrée. Cliquez sur + Nouveau.
             </p>
           ) : (
@@ -98,20 +98,20 @@ export default function LorePanel({ projectId }: Props) {
                 <li key={entry.id}>
                   <button
                     onClick={() => setSelected(entry)}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 border-b border-gray-100"
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 dark:text-gray-200"
                   >
                     <div className="flex items-center gap-2">
                       <span className="font-medium">{entry.name}</span>
                       <span
                         className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${
-                          TYPE_BADGE[entry.type] ?? 'bg-gray-100 text-gray-600'
+                          TYPE_BADGE[entry.type] ?? 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
                         }`}
                       >
                         {entry.type}
                       </span>
                     </div>
                     {entry.description && (
-                      <p className="text-xs text-gray-400 truncate mt-0.5">
+                      <p className="text-xs text-gray-400 dark:text-gray-500 truncate mt-0.5">
                         {entry.description}
                       </p>
                     )}

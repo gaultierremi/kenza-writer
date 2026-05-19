@@ -51,9 +51,9 @@ export default function CharacterPanel({ projectId }: Props) {
   const showForm = creating || selected !== null
 
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-white border-r border-gray-200">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-        <h2 className="font-semibold text-sm text-gray-800">Personnages</h2>
+    <div className="flex flex-col h-full overflow-hidden bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+        <h2 className="font-semibold text-sm text-gray-800 dark:text-gray-100">Personnages</h2>
         {!showForm && (
           <button
             onClick={() => setCreating(true)}
@@ -80,9 +80,9 @@ export default function CharacterPanel({ projectId }: Props) {
       ) : (
         <div className="flex-1 overflow-y-auto">
           {loading ? (
-            <p className="text-xs text-gray-400 p-4">Chargement…</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 p-4">Chargement…</p>
           ) : characters.length === 0 ? (
-            <p className="text-xs text-gray-400 p-4">
+            <p className="text-xs text-gray-400 dark:text-gray-500 p-4">
               Aucun personnage. Cliquez sur + Nouveau.
             </p>
           ) : (
@@ -91,16 +91,16 @@ export default function CharacterPanel({ projectId }: Props) {
                 <li key={c.id}>
                   <button
                     onClick={() => setSelected(c)}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 border-b border-gray-100"
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 dark:text-gray-200"
                   >
                     <span className="font-medium">{c.name}</span>
                     {c.age && (
-                      <span className="text-gray-500 text-xs ml-2">
+                      <span className="text-gray-500 dark:text-gray-400 text-xs ml-2">
                         {c.age} ans
                       </span>
                     )}
                     {c.physical_description && (
-                      <p className="text-xs text-gray-400 truncate mt-0.5">
+                      <p className="text-xs text-gray-400 dark:text-gray-500 truncate mt-0.5">
                         {c.physical_description}
                       </p>
                     )}

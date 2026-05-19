@@ -124,38 +124,38 @@ export default function LoreForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-sm">
+        <h3 className="font-semibold text-sm dark:text-gray-100">
           {initial ? "Modifier l'entrée" : 'Nouvelle entrée lore'}
         </h3>
         <button
           type="button"
           onClick={onCancel}
-          className="text-xs text-gray-500 hover:text-gray-700"
+          className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
         >
           ✕ Fermer
         </button>
       </div>
 
       {error && (
-        <p className="text-xs text-red-600 bg-red-50 rounded p-2">{error}</p>
+        <p className="text-xs text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded p-2">{error}</p>
       )}
 
       <label className="flex flex-col gap-1">
-        <span className="text-xs font-medium text-gray-600">Nom *</span>
+        <span className="text-xs font-medium text-gray-600 dark:text-gray-300">Nom *</span>
         <input
           value={values.name}
           onChange={(e) => setField('name', e.target.value)}
           required
-          className="border rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-purple-400"
+          className="border border-gray-200 dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-purple-400"
         />
       </label>
 
       <label className="flex flex-col gap-1">
-        <span className="text-xs font-medium text-gray-600">Type</span>
+        <span className="text-xs font-medium text-gray-600 dark:text-gray-300">Type</span>
         <select
           value={values.type}
           onChange={(e) => setField('type', e.target.value as LoreType)}
-          className="border rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-purple-400"
+          className="border border-gray-200 dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-purple-400"
         >
           {LORE_TYPES.map(({ value, label }) => (
             <option key={value} value={value}>
@@ -173,12 +173,12 @@ export default function LoreForm({
         ] as [keyof FormValues, string][]
       ).map(([field, label]) => (
         <label key={field} className="flex flex-col gap-1">
-          <span className="text-xs font-medium text-gray-600">{label}</span>
+          <span className="text-xs font-medium text-gray-600 dark:text-gray-300">{label}</span>
           <textarea
             value={values[field] as string}
             onChange={(e) => setField(field, e.target.value as FormValues[typeof field])}
             rows={2}
-            className="border rounded px-2 py-1 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-purple-400"
+            className="border border-gray-200 dark:border-gray-600 rounded px-2 py-1 text-sm resize-none bg-white dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-purple-400"
           />
         </label>
       ))}
@@ -196,7 +196,7 @@ export default function LoreForm({
             type="button"
             onClick={handleDelete}
             disabled={saving}
-            className="bg-red-50 text-red-600 border border-red-200 rounded px-3 py-1.5 text-sm hover:bg-red-100 disabled:opacity-50"
+            className="bg-red-50 text-red-600 border border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800 rounded px-3 py-1.5 text-sm hover:bg-red-100 dark:hover:bg-red-900/40 disabled:opacity-50"
           >
             Supprimer
           </button>
